@@ -146,8 +146,21 @@ Promise.all = function (values) {
 
 // resolve
 Promise.resolve = function (value) {
+    // 如果传入 Promise 就直接返回
+    if (value instanceof Promise) {
+        return value;
+    }
+    // 转成常规方式
     return new Promise((resolve, reject) => {
         resolve(value);
+    });
+};
+
+// reject
+Promise.reject = function (value) {
+    // 转成常规方式
+    return new Promise((resolve, reject) => {
+        reject(value);
     });
 };
 

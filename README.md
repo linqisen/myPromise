@@ -3,6 +3,7 @@
 * then
 * catch
 * resolve
+* reject
 * all
 ### 未实现的
 * race
