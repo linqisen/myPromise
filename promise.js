@@ -14,9 +14,13 @@
     4.当Promise执行错误的时候下一个then会执行成功的方法。
  */
 
+const PENDING = "pending";
+const FUFILLED = "fufilled";
+const REJECTED = "rejected";
+
 function Promise(executor) {
     // 正在进行
-    this.status = "pending";
+    this.status = PENDING;
     // 成功的值
     this.success = undefined;
     // 失败的值
@@ -29,8 +33,8 @@ function Promise(executor) {
     const that = this;
     // 成功的函数
     function resolve(value) {
-        if (that.status === "pending") {
-            that.status = "fufilled";
+        if (that.status === PENDING) {
+            that.status = FUFILLED;
             that.success = value;
             // 如何执行数组里面的函数
             that.onfufilledCallback.forEach((fn) => {
@@ -40,8 +44,8 @@ function Promise(executor) {
     }
     // 失败的函数
     function reject(value) {
-        if (that.status === "pending") {
-            that.status = "rejected";
+        if (that.status === PENDING) {
+            that.status = REJECTED;
             that.error = value;
             // 执行失败的数组
             that.onrejectedCallback.forEach((fn) => {
@@ -62,7 +66,7 @@ Promise.prototype.then = function (onfufilled, onrejected) {
     //then的链式
     const promise2 = new Promise(function (resolve, reject) {
         // 上面是成功的状态
-        if (that.status === "fufilled") {
+        if (that.status === FUFILLED) {
             try {
                 const res = onfufilled(that.success);
                 resolve(res);
@@ -71,7 +75,7 @@ Promise.prototype.then = function (onfufilled, onrejected) {
             }
         }
         // 上面是失败的状态
-        if (that.status === "rejected") {
+        if (that.status === REJECTED) {
             try {
                 const res = onrejected(that.error);
                 resolve(res);
@@ -80,7 +84,7 @@ Promise.prototype.then = function (onfufilled, onrejected) {
             }
         }
         // 说明没有走成功和失败
-        if (that.status === "pending") {
+        if (that.status === PENDING) {
             that.onfufilledCallback.push(() => {
                 try {
                     const res = Fonfufilled(that.success);
@@ -137,6 +141,13 @@ Promise.all = function (values) {
                 Process(i, current);
             }
         }
+    });
+};
+
+// resolve
+Promise.resolve = function (value) {
+    return new Promise((resolve, reject) => {
+        resolve(value);
     });
 };
 

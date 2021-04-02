@@ -1,0 +1,9 @@
+### 已实现
+* Promise
+* then
+* catch
+* resolve
+* all
+### 未实现的
+* race
+* 等等
